@@ -1,24 +1,29 @@
-import React from 'react';
-import { Hello } from './Hello';
-import { Info } from './Info';
-import { Task } from './Task'
+import React, { useState, useEffect } from 'react';
+import { TaskLi } from './TaskLi'
 import { useTracker } from 'meteor/react-meteor-data'
-import { TasksCollection } from '../api/TasksCollection';
+import { fetchTasks } from '../api/TasksCollection';
+import { TaskForm } from './TaskForm'
+import {Meteor} from 'meteor/meteor'
 
-const tasks = [
-  { _id: 1, text: 'First Task' },
-  { _id: 2, text: 'Second Task' },
-  { _id: 3, text: 'Third Task' }
-]
 
 export const App = () => {
-  const tasks = useTracker(() => TasksCollection.find({}).fetch())
+  const [hideChecked, setHideCheck] = useState(false)
+  const tasks = useTracker(() => fetchTasks({hideChecked}))
+
+  useEffect(()=>{
+    Meteor.loginWithPassword('admin', '1234')
+  }, [])
+
   return (
     <div>
       <h1>Welcome to Meteor!</h1>
 
+      <TaskForm />
+
+      <button onClick={() => setHideCheck(!hideChecked)}> {hideChecked ? 'Show All' : 'Hide Checked'} </button>
+
       <ul>
-        {tasks.map(task => <Task key={task._id} task={task} />)}
+        {tasks.map(task => <TaskLi key={task._id} task={task} />)}
       </ul>
     </div>
   )
