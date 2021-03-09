@@ -1,5 +1,5 @@
 import React, { useState} from 'react'
-import {addTask, TasksCollection} from '/imports/api/TasksCollection'
+import { Meteor} from 'meteor/meteor'
 
 export const TaskForm = () => {
   const [text, setText] = useState("")
@@ -8,7 +8,7 @@ export const TaskForm = () => {
     e.preventDefault()
     if(!text) return
 
-    addTask(text, false)
+    Meteor.call('tasks.add', text, false)
 
     setText('')
   }

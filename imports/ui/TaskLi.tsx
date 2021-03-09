@@ -1,5 +1,6 @@
 import React from 'react'
-import { Task, toggleTaskChecked, deleteTask } from '/imports/api/TasksCollection'
+import { Task, deleteTask } from '../db/TasksCollection'
+import {Meteor} from 'meteor/meteor'
 
 interface TaskLiArgs {
   task: Task;
@@ -11,10 +12,10 @@ export const TaskLi = ({ task }: TaskLiArgs) => {
       <input
         type='checkbox'
         checked={!!task.checked}
-        onClick={() => toggleTaskChecked({ _id: task._id || "", checked: task.checked })}>
+        onClick={() => Meteor.call('tasks.toggleChecked', task._id , task.checked )}>
       </input>
       <span>{task.text}</span>
-      <button onClick={() => deleteTask(task._id || "")}> &times;</button>
+      <button onClick={() => Meteor.call('tasks.remove', task._id)}> &times;</button>
     </li>
   )
 }
